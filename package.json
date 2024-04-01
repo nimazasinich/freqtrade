@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vue-class-component": "^8.0.0-beta.4"
+  }
+}
