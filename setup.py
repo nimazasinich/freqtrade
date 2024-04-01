@@ -1,4 +1,4 @@
-from setuptools import setup
+FROM setuptools import setup
 
 
 # Requirements used for submodules
