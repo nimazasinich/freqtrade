@@ -19,7 +19,7 @@ concurrency:
 permissions:
   repository-projects: read
 jobs:
-  build-linux:
+  build_linux:
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -60,16 +60,11 @@ jobs:
         export TA_LIBRARY_PATH=${HOME}/dependencies/lib
         export TA_INCLUDE_PATH=${HOME}/dependencies/include
         pip install -r requirements-dev.txt
-        pip install -e ft_client/
         pip install -e .
-
-    - name: Check for version alignment
-      run: |
-        python build_helpers/freqtrade_client_version_align.py
 
     - name: Tests
       run: |
-        pytest --random-order --cov=freqtrade --cov=freqtrade_client --cov-config=.coveragerc
+        pytest --random-order --cov=freqtrade --cov-config=.coveragerc
 
     - name: Coveralls
       if: (runner.os == 'Linux' && matrix.python-version == '3.10' && matrix.os == 'ubuntu-22.04')
@@ -193,7 +188,6 @@ jobs:
         export TA_LIBRARY_PATH=${HOME}/dependencies/lib
         export TA_INCLUDE_PATH=${HOME}/dependencies/include
         pip install -r requirements-dev.txt
-        pip install -e ft_client/
         pip install -e .
 
     - name: Tests
@@ -368,7 +362,7 @@ jobs:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
 
-  build-linux-online:
+  build_linux_online:
     # Run pytest with "live" checks
     runs-on: ubuntu-22.04
     steps:
@@ -404,26 +398,25 @@ jobs:
         export TA_LIBRARY_PATH=${HOME}/dependencies/lib
         export TA_INCLUDE_PATH=${HOME}/dependencies/include
         pip install -r requirements-dev.txt
-        pip install -e ft_client/
         pip install -e .
 
     - name: Tests incl. ccxt compatibility tests
       env:
         CI_WEB_PROXY: http://152.67.78.211:13128
       run: |
-        pytest --random-order --longrun --durations 20 -n auto
+        pytest --random-order --longrun --durations 20 -n auto --dist loadscope
 
 
   # Notify only once - when CI completes (and after deploy) in case it's successfull
   notify-complete:
     needs: [
-      build-linux,
+      build_linux,
       build-macos,
       build-windows,
       docs-check,
       mypy-version-check,
       pre-commit,
-      build-linux-online
+      build_linux_online
     ]
     runs-on: ubuntu-22.04
     # Discord notification can't handle schedule events
@@ -450,7 +443,7 @@ jobs:
 
   build:
     name: "Build"
-    needs: [ build-linux, build-macos, build-windows, docs-check, mypy-version-check, pre-commit ]
+    needs: [ build_linux, build-macos, build-windows, docs-check, mypy-version-check, pre-commit ]
     runs-on: ubuntu-22.04
 
     steps:
@@ -474,19 +467,6 @@ jobs:
           dist
         retention-days: 10
 
-    - name: Build Client distribution
-      run: |
-        pip install -U build
-        python -m build --sdist --wheel ft_client
-
-    - name: Upload artifacts 📦
-      uses: actions/upload-artifact@v4
-      with:
-        name: freqtrade-client-build
-        path: |
-          ft_client/dist
-        retention-days: 10
-
   deploy-pypi:
     name: "Deploy to PyPI"
     needs: [ build ]
@@ -504,10 +484,8 @@ jobs:
     - name: Download artifact  📦
       uses: actions/download-artifact@v4
       with:
-        pattern: freqtrade*-build
+        name: freqtrade-build
         path: dist
-        merge-multiple: true
-
 
     - name: Publish to PyPI (Test)
       uses: pypa/gh-action-pypi-publish@v1.8.14
@@ -519,7 +497,7 @@ jobs:
 
 
   deploy-docker:
-    needs: [ build-linux, build-macos, build-windows, docs-check, mypy-version-check, pre-commit ]
+    needs: [ build_linux, build-macos, build-windows, docs-check, mypy-version-check, pre-commit ]
     runs-on: ubuntu-22.04
 
     if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'release') && github.repository == 'freqtrade/freqtrade'
@@ -549,7 +527,7 @@ jobs:
     - name: Switch docker to experimental
       run: |
           docker version -f '{{.Server.Experimental}}'
-          echo $'{\n    "experimental": true\n}' | sudo tee /etc/docker/daemon.json
+          echo $'{\n    "experimental": true\n}' | sudo tee
           sudo systemctl restart docker
           docker version -f '{{.Server.Experimental}}'
 

@@ -1,0 +1,4 @@
+echo '{' > lint-staged.json
+echo '  "*.js": "eslint --cache --fix",' >> lint-staged.json
+echo '  "*.css": "stylelint --fix"' >> lint-staged.json
+echo '}' >> lint-staged.json
