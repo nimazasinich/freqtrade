@@ -66,7 +66,7 @@ def patch_eventloop_threading(telegrambot):
         telegrambot._loop = asyncio.new_event_loop()
         is_init = True
         telegrambot._loop.run_forever()
-    x = threading.Thread(target=thread_fuck)
+    x = threading.Thread(target=thread_fuck, daemon=True)
     x.start()
     while not is_init:
         pass
