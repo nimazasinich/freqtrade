@@ -1,11 +1,13 @@
 {
   "dependencies": {
+    "@vuepic/vue-datepicker": "^8.4.0",
     "pnpm": "^8.15.6",
     "vue-class-component": "^7.2.6"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.2",
-    "stylelint": "^16.3.1"
+    "stylelint": "^16.3.1",
+    "typescript": "^5.4.4"
   }
 }
