@@ -1,0 +1,124 @@
+# This file created by conda-build 24.3.0
+# meta.yaml template originally from:
+# D:\a\1\s\recipe, last modified Mon Mar 25 18:23:13 2024
+# ------------------------------------------------
+
+package:
+  name: micromamba
+  version: 1.5.8
+source:
+  - folder: mamba
+    patches:
+      - 0001-Change-Windows-static-lib-name.patch
+      - 0001-Compile-with-MD.patch
+    sha256: 4ac788dcb9f6e7b011250e66138e60ba3074b38d54b8160b8b6364a408026076
+    url: https://github.com/mamba-org/mamba/archive/refs/tags/micromamba-1.5.8.tar.gz
+  - folder: vcpkg
+    sha256: 241ae285fe27ce3f8478529d9a05e7a49396789fd8618ed62a11c3e4835aaab2
+    url: https://github.com/microsoft/vcpkg/archive/refs/tags/2023.08.09.tar.gz
+build:
+  ignore_run_exports_from:
+    - fmt
+    - libsolv
+    - python
+    - spdlog
+  number: '0'
+  string: '0'
+requirements:
+  build:
+    - 7zip 23.01 h91493d7_2
+    - bzip2 1.0.8 hcfcfb64_5
+    - ca-certificates 2024.2.2 h56e8100_0
+    - cmake 3.29.0 hf0feee3_0
+    - curl 8.6.0 hd5e4a3a_0
+    - git 2.44.0 h57928b3_0
+    - krb5 1.21.2 heb0366b_0
+    - libcurl 8.6.0 hd5e4a3a_0
+    - libexpat 2.6.2 h63175ca_0
+    - libffi 3.4.2 h8ffe710_5
+    - libsqlite 3.45.2 hcfcfb64_0
+    - libssh2 1.11.0 h7dfc565_0
+    - libuv 1.48.0 hcfcfb64_0
+    - libzlib 1.2.13 hcfcfb64_5
+    - ninja 1.11.1 h91493d7_0
+    - openssl 3.2.1 hcfcfb64_1
+    - python 3.10.14 h4de0772_0_cpython
+    - tk 8.6.13 h5226925_1
+    - tzdata 2024a h0c530f3_0
+    - ucrt 10.0.22621.0 h57928b3_0
+    - vc 14.3 hcf57466_18
+    - vc14_runtime 14.38.33130 h82b7239_18
+    - vcpkg-tool 2023.03.14 h91bfe4b_0
+    - vs2015_runtime 14.38.33130 hcb4865c_18
+    - vs2019_win-64 19.29.30139 he1865b1_18
+    - vswhere 3.1.4 h57928b3_0
+    - xz 5.2.6 h8d14728_0
+    - zlib 1.2.13 hcfcfb64_5
+    - zstd 1.5.5 h12be248_0
+  host:
+    - cli11 2.4.1 h63175ca_0
+    - cpp-expected 1.1.0 h91493d7_0
+    - fmt 10.2.1 h181d51b_0
+    - libsolv 0.7.28 h12be248_1
+    - libsolv-static 0.7.28 h12be248_1
+    - libzlib 1.2.13 hcfcfb64_5
+    - nlohmann_json 3.11.3 h1537add_0
+    - spdlog 1.12.0 h64d2f7d_2
+    - ucrt 10.0.22621.0 h57928b3_0
+    - vc 14.3 hcf57466_18
+    - vc14_runtime 14.38.33130 h82b7239_18
+    - vs2015_runtime 14.38.33130 hcb4865c_18
+    - winreg 6.2.0 h57928b3_0
+    - yaml-cpp-static 0.8.0 h63175ca_0
+  run:
+    - ucrt >=10.0.20348.0
+    - vc >=14.2,<15
+    - vc14_runtime >=14.29.30139
+test:
+  commands:
+    - if not exist %LIBRARY_BIN%\micromamba.exe (exit 1)
+    - micromamba.exe --help
+    - mkdir %TEMP%\mamba
+    - set "MAMBA_ROOT_PREFIX=%TEMP%\mamba"
+    - micromamba.exe create -n test --override-channels -c conda-forge --yes python=3.9
+    - '%MAMBA_ROOT_PREFIX%\envs\test\python.exe --version'
+    - '%MAMBA_ROOT_PREFIX%\envs\test\python.exe -c "import os"'
+about:
+  dev_url: https://github.com/mamba-org/mamba
+  home: https://github.com/mamba-org/mamba
+  license: BSD-3-Clause AND MIT AND OpenSSL
+  license_family: BSD
+  license_file:
+    - CLI11_LICENSE.txt
+    - CURL_LICENSE.txt
+    - C_ARES_LICENSE.txt
+    - FMT_LICENSE.txt
+    - KRB5_LICENSE.txt
+    - LIBARCHIVE_LICENSE.txt
+    - LIBEV_LICENSE.txt
+    - LIBLZ4_LICENSE.txt
+    - LIBNGHTTP2_LICENSE.txt
+    - LIBOPENSSL_3_LICENSE.txt
+    - LIBOPENSSL_LICENSE.txt
+    - LIBSOLV_LICENSE.txt
+    - NLOHMANN_JSON_LICENSE.txt
+    - REPROC_LICENSE.txt
+    - SPDLOG_LICENSE.txt
+    - TL_EXPECTED_LICENSE.txt
+    - ZSTD_LICENSE.txt
+    - mamba/LICENSE
+  summary: Micromamba is a tiny version of mamba, the fast conda package installer.
+extra:
+  copy_test_source_files: true
+  final: true
+  flow_run_id: azure_20240325.7.1
+  recipe-maintainers:
+    - AntoinePrv
+    - JohanMabille
+    - SylvainCorlay
+    - adriendelsalle
+    - mariusvniekerk
+    - pavelzw
+    - wolfv
+  remote_url: https://github.com/conda-forge/micromamba-feedstock
+  sha: fa79b8513b2ae78e919ffb0a0f3de48baee0b62b
